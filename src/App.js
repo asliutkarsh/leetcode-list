@@ -1,25 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import { ChakraProvider ,ColorModeScript} from '@chakra-ui/react'
+import { Routes,Route,} from 'react-router-dom'
+import UserProvider from './context/UserProvider';
+import History from './pages/History';
+import Home from './pages/Home';
+import Dashboard from './pages/Dashboard';
+import { FaqPage } from './pages/FaqPage';
+import Profile from './pages/Profile';
+import ProtectedRoute from './components/ProtectedRoute'
+import Login from "./components/Login";
+import Signup from "./components/Signup";
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+   
+      <ChakraProvider >
+        <ColorModeScript initialColorMode="dark"/>
+            <Routes>
+              <Route path="/" element = {<Home/>} />
+              <Route path="/dashboard" element = {<ProtectedRoute><Dashboard/></ProtectedRoute>} />
+              <Route path="/history" element = { <ProtectedRoute><History/></ProtectedRoute>} />
+              <Route path="/profile" element = {<ProtectedRoute><Profile/></ProtectedRoute>} />
+              <Route path="/login" element = {<Login/>} />
+              <Route path="/signup" element = {<Signup/>} />
+              <Route path="/faq" element = {<FaqPage/>} />
+            </Routes> 
+      </ChakraProvider>
+    
+    
+
+);
 }
 
 export default App;
