@@ -17,11 +17,11 @@ export const createTask = async (taskDetails,userId)=>{
 //tasks/:taskId
 
 //create service to get all task from server using myAxios
-export const getTasksByUser = async (userId)=>{
+export const getTasksByUser = async (userId,pageNumber,pageSize)=>{
     try {
         console.log('Getting Tasks Api Call')
         return await myAxiosWithAuth.get(
-            `/users/${userId}/tasks`
+            `/users/${userId}/tasks?pageNumber=${pageNumber}&pageSize=${pageSize}`
         )
     } catch (e) {
         throw e;

@@ -7,7 +7,7 @@ function Points({ user }) {
   return (
     <Box 
     width="100%"
-    height="70vh"
+    height="50vh"
     display="flex"
     justifyContent="center"
     alignItems="center"

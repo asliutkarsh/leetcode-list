@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react'
 import { Formik, Field } from "formik";
 import {useAuth} from "../context/UserProvider";
-import {useNavigate} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import {errorNotification} from "../services/notification";
 
 
@@ -27,7 +27,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user?.username != null ) {
+    if (user?.username !== "" ) {
         navigate("/dashboard");
     }
 })
@@ -42,6 +42,14 @@ const Login = () => {
         bg={useColorModeValue('gray.50', 'gray.800')}
       >
         <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
+            <Stack align={'center'}>
+                <Heading fontSize={'4xl'} textAlign={'center'}>
+                    Sign in
+                </Heading>
+                {/*<Text fontSize={'lg'} color={'gray.600'}>*/}
+                {/*    to enjoy all of our cool features ✌️*/}
+                {/*</Text>*/}
+            </Stack>
           <Box
             minH={'40vh'}
             rounded={'lg'}
@@ -130,11 +138,10 @@ const Login = () => {
                   {/* <Link color={'blue.400'}>Forgot password?</Link> */}
                 </Stack>
                 <Button
-                  bg={'blue.400'}
-                  color={'white'}
-                  _hover={{
-                    bg: 'blue.500',
-                  }}
+                    bg={'orange.400'}
+                    _hover={{
+                        bg: 'orange.600',
+                    }}
                   type="submit"
                   isLoading={isSubmitting}
                   disabled={errors || isSubmitting}
@@ -142,6 +149,12 @@ const Login = () => {
                   Sign in
                 </Button>
               </Stack>
+                <Stack pt={2}>
+                    <Text align={'center'} >
+                        Don't have an account ? <Link as={NavLink} to={'/signup'} color={'blue.400'} >Sign up here</Link>
+                    </Text>
+                </Stack>
+
             </Stack>
             </form>
         )}

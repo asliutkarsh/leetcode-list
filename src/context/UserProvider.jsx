@@ -1,6 +1,7 @@
 import React, { useEffect, useState, createContext, useContext } from 'react'
 import {getProfile, login as performLogin} from '../services/user-service'
 import jwtDecode from 'jwt-decode'
+import {errorNotification} from "../services/notification";
 
 const AuthContext = createContext({})
 
@@ -15,11 +16,6 @@ const UserProvider = ({ children }) => {
     useEffect(() => {
         setUserFromLocal()
     }, [])
-
-    useEffect(() => {
-        // console.log(user);
-    }, [user]);
-
 
     /**
      * set the user in the state from the local storage
@@ -48,7 +44,13 @@ const UserProvider = ({ children }) => {
                         resolve(res)
                     }
                 ).catch((err) => {
-                        reject(err)
+                    if (err.response && err.response.status === 403) {
+                        logOut();
+                        errorNotification("Session Expired", "Please login again")
+                        reject(err);
+                    } else {
+                        reject(err);
+                    }
                     }
                 )
         })
@@ -86,7 +88,12 @@ const UserProvider = ({ children }) => {
     const logOut = () => {
         localStorage.removeItem('token')
         localStorage.removeItem('user')
-        setUser(null)
+        setUser({
+            id: 0,
+            name: "",
+            username: "",
+            totalPoints: 0,
+            dailyPoints: 0    })
     }
 
     /**
@@ -104,6 +111,7 @@ const UserProvider = ({ children }) => {
         const { exp: expiration } = jwtDecode(token)
         if (Date.now() > expiration * 1000) {
             logOut()
+            errorNotification("Session Expired", "Please login again")
             return false
         }
         return true

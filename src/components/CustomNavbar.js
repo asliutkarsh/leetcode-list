@@ -17,7 +17,8 @@ import { FaSun, FaMoon, FaUser, FaHistory ,FaHome,FaQuestion} from 'react-icons/
 import{NavLink } from 'react-router-dom';
 import { useAuth } from '../context/UserProvider'
 
-
+// Navbar component
+// This component is used to display the navbar on the top of the page
 function CustomNavbar() {
 
     const { user, logOut,isCustomerAuthenticated } = useAuth()
@@ -30,7 +31,7 @@ function CustomNavbar() {
             <Heading
                   fontWeight="extrabold"
                   size="2xl"
-                  bgGradient="linear(to-r,pink.500,pink.300,blue.300)"
+                  bgGradient="linear(to-r, orange.200,orange.300, orange.400)"
                   bgClip="text"
                   as= {NavLink}  
                   to={isCustomerAuthenticated() ? "/dashboard" : "/"}  
@@ -82,7 +83,8 @@ function CustomNavbar() {
                   size={'md'}
                   icon={<FaUser/>}
                   iconLabel='profile'
-                  bg = {'gray.700'}
+                  color={colorMode === 'light' ? 'gray': 'white'}
+                  bg = {colorMode === 'light' ? 'gray.200': 'gray.700'}
                 />
 
                   </MenuButton>
@@ -116,7 +118,7 @@ function CustomNavbar() {
                     <IconButton
                     icon={<FaQuestion />}
                     as= {NavLink}  
-                    to={'/new'}
+                    to={'/faq'}
                     isRound="true"
                     size="lg"
                     aria-label=" faq"

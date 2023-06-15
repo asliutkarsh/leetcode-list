@@ -23,8 +23,9 @@ import {
 } from '@chakra-ui/react';
 import {FaTrash} from 'react-icons/fa';
 import {useAuth} from "../context/UserProvider";
-import {createTask, deleteTask, getTasksByUser} from "../services/task-service";
+import { deleteTask, getTasksByUser} from "../services/task-service";
 import {errorNotification, successNotification} from "../services/notification";
+import InfiniteScroll from 'react-infinite-scroll-component'
 
 
 const TaskList = () => {
@@ -57,7 +58,7 @@ const TaskList = () => {
      */
     const getTask = async () => {
         try {
-            const res = await getTasksByUser(user?.id);
+            const res = await getTasksByUser(user?.id,0,10);
             const resData = res.data;
             setData((prevData) => ({
                 ...prevData,
@@ -69,8 +70,29 @@ const TaskList = () => {
                 pageNumber: resData.pageNumber,
             }));
         } catch (error) {
+        //     handle error
         }
     };
+
+    const getMoreTasks = async () => {
+        try {
+            const nextPage = data.pageNumber + 1;
+            const res = await getTasksByUser(user?.id, nextPage, 10);
+            const resData = res.data;
+            setData((prevData) => ({
+                ...prevData,
+                tasks: [...prevData.tasks, ...resData.tasks],
+                totalPages: resData.totalPages,
+                totalElement: resData.totalElement,
+                pageSize: resData.pageSize,
+                lastPage: resData.lastPage,
+                pageNumber: resData.pageNumber,
+            }));
+        } catch (error) {
+            // Handle error
+        }
+    };
+
 
     /**
      * popover for delete confirmation
@@ -139,6 +161,7 @@ const TaskList = () => {
         return groupedTasks;
     };
 
+
     /**
      * If there are no tasks, display a message
      * Otherwise, display the table
@@ -152,8 +175,16 @@ const TaskList = () => {
     }
 
     return (
-        <TableContainer>
+        <TableContainer >
             <Box overflowX="auto">
+                <InfiniteScroll
+                    dataLength={data.tasks.length}
+                    next={getMoreTasks}
+                    hasMore={!data.lastPage}
+                    loader={<h4>Loading...</h4>}
+                    endMessage={<p style={{ textAlign: 'center' }}>Yay! You have seen it all</p>}
+                    style={{ width: '100%' }}
+                >
                 <Table variant='simple'>
                     <Thead>
                         <Tr>
@@ -166,64 +197,66 @@ const TaskList = () => {
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {Object.entries(groupTasksByDay(data.tasks)).map(([day, tasks]) => (
-                            <Fragment key={day}>
-                                <Tr>
-                                    <Th colSpan={6}>{day}</Th>
-                                </Tr>
-                                {tasks.map((task, index) => (
-                                    <Tr key={index}>
-                                        <Td>{task.problem_id}</Td>
-                                        <Td>
-                                            <a href={task.link} target="_blank" rel="noopener noreferrer">
-                                                {task.title}
-                                            </a>
-                                        </Td>
-                                        <Td className={`difficulty-text ${task.difficulty.toLowerCase()}`}>
-                                            {task.difficulty}
-                                        </Td>
-                                        <Td>{formatTimestamp(task.timestamp).split(',')[1].trim()}</Td>
-                                        <Td>{task.points}</Td>
-                                        <Td>
-                                            <Popover
-                                                returnFocusOnClose={false}
-                                                isOpen={openPopover === task.id}
-                                                onClose={closePopover}
-                                                placement='left'
-                                                closeOnBlur={false}
-                                            >
-                                                <PopoverTrigger>
-                                                    <IconButton
-                                                        icon={<FaTrash />}
-                                                        isRound="true"
-                                                        size="sm"
-                                                        alignSelf="flex-end"
-                                                        onClick={() => openPopoverForItem(task.id)}
-                                                        aria-label='delete'
-                                                    />
-                                                </PopoverTrigger>
-                                                <PopoverContent>
-                                                    <PopoverHeader fontWeight='semibold'>Confirmation</PopoverHeader>
-                                                    <PopoverArrow />
-                                                    <PopoverCloseButton />
-                                                    <PopoverBody>
-                                                        Are you sure you want to delete?
-                                                    </PopoverBody>
-                                                    <PopoverFooter d='flex' justifyContent='flex-end'>
-                                                        <ButtonGroup size='sm'>
-                                                            <Button variant='outline' onClick={closePopover}>No</Button>
-                                                            <Button colorScheme='red' onClick={() => handleDelete(task.id)}>Yes</Button>
-                                                        </ButtonGroup>
-                                                    </PopoverFooter>
-                                                </PopoverContent>
-                                            </Popover>
-                                        </Td>
+                            {Object.entries(groupTasksByDay(data.tasks)).map(([day, tasks]) => (
+                                <Fragment key={day}>
+                                    <Tr>
+                                        <Th colSpan={6}>{day}</Th>
                                     </Tr>
-                                ))}
-                            </Fragment>
-                        ))}
+                                    {tasks.map((task, index) => (
+                                        <Tr key={index}>
+                                            <Td>{task.problemId}</Td>
+                                            <Td>
+                                                <a href={task.link} target="_blank" rel="noopener noreferrer">
+                                                    {task.title}
+                                                </a>
+                                            </Td>
+                                            <Td className={`difficulty-text ${task.difficulty.toLowerCase()}`}>
+                                                {task.difficulty}
+                                            </Td>
+                                            <Td>{formatTimestamp(task.timestamp).split(',')[1].trim()}</Td>
+                                            <Td>{task.points}</Td>
+                                            <Td>
+                                                <Popover
+                                                    returnFocusOnClose={false}
+                                                    isOpen={openPopover === task.id}
+                                                    onClose={closePopover}
+                                                    placement='left'
+                                                    closeOnBlur={false}
+                                                >
+                                                    <PopoverTrigger>
+                                                        <IconButton
+                                                            icon={<FaTrash />}
+                                                            isRound="true"
+                                                            size="sm"
+                                                            alignSelf="flex-end"
+                                                            onClick={() => openPopoverForItem(task.id)}
+                                                            aria-label='delete'
+                                                        />
+                                                    </PopoverTrigger>
+                                                    <PopoverContent>
+                                                        <PopoverHeader fontWeight='semibold'>Confirmation</PopoverHeader>
+                                                        <PopoverArrow />
+                                                        <PopoverCloseButton />
+                                                        <PopoverBody>
+                                                            Are you sure you want to delete?
+                                                        </PopoverBody>
+                                                        <PopoverFooter d='flex' justifyContent='flex-end'>
+                                                            <ButtonGroup size='sm'>
+                                                                <Button variant='outline' onClick={closePopover}>No</Button>
+                                                                <Button bg={'orange.500'} colorScheme='orange' onClick={() => handleDelete(task.id)}>Yes</Button>
+                                                            </ButtonGroup>
+                                                        </PopoverFooter>
+                                                    </PopoverContent>
+                                                </Popover>
+                                            </Td>
+                                        </Tr>
+                                    ))}
+                                </Fragment>
+                            ))}
+
                     </Tbody>
                 </Table>
+                </InfiniteScroll>
             </Box>
             <style jsx="true">{`
                 //@media (max-width: 600px) {

@@ -1,24 +1,24 @@
 import {
-  Flex,
-  Box,
-  FormControl,
-  FormLabel,
-  Input,
-  InputGroup,
-  HStack,
-  InputRightElement,
-  Stack,
-  Button,
-  Heading,
-  Text,
-  useColorModeValue,
-  Link,
-  FormErrorMessage
+    Flex,
+    Box,
+    FormControl,
+    FormLabel,
+    Input,
+    InputGroup,
+    HStack,
+    InputRightElement,
+    Stack,
+    Button,
+    Heading,
+    Text,
+    useColorModeValue,
+    Link,
+    FormErrorMessage, IconButton
 } from '@chakra-ui/react'
 import { useState ,useEffect} from 'react'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { Formik, Field } from "formik";
-import {useNavigate} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import {successNotification, errorNotification} from "../services/notification";
 import { signUp as saveUser } from '../services/user-service'
 import {useAuth} from "../context/UserProvider";
@@ -31,7 +31,7 @@ export default function Signup() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user?.username != null) {
+    if (user?.username !== "") {
       navigate("/dashboard");
     }
 })
@@ -45,6 +45,14 @@ export default function Signup() {
       bg={useColorModeValue('gray.50', 'gray.800')}
     >
       <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
+          <Stack align={'center'}>
+              <Heading fontSize={'4xl'} textAlign={'center'}>
+                  Sign up
+              </Heading>
+              {/*<Text fontSize={'lg'} color={'gray.600'}>*/}
+              {/*    to enjoy all of our cool features ✌️*/}
+              {/*</Text>*/}
+          </Stack>
         <Box
           rounded={'lg'}
           bg={useColorModeValue('white', 'gray.700')}
@@ -60,12 +68,13 @@ export default function Signup() {
             // rememberMe: false
           }}
           validateOnMount={true}
-          onSubmit={(user, {setSubmitting})  => {
+          onSubmit={(user, {setSubmitting,resetForm})  => {
             setSubmitting(true);
             console.log(user)
             console.log("Submitting")
             saveUser(user).then(res => {
               console.log("Successfully logged in");
+                resetForm({ values: { name: "", username: "", password: "", } });
               successNotification(
                 "User saved",
                 `${user.name} was successfully saved`
@@ -81,7 +90,7 @@ export default function Signup() {
           }}
 
           onSuccess={() => {
-            navigate("/new");
+            navigate("/dashboard");
         }}
           >
           {({ handleSubmit, errors, touched ,isSubmitting}) => (
@@ -133,7 +142,7 @@ export default function Signup() {
                     as={Input}
                     id="password-signup"
                     name="password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     placeholder="Enter password"
                     validate={(value) => {
                       let error;
@@ -144,14 +153,14 @@ export default function Signup() {
                     }}
                   />
                   <InputRightElement h={'full'}>
-                      <Button
+                      <IconButton
+                        aria-label={'Toggle Password Visibility'}
+                        icon={showPassword ? <FaEyeSlash /> : <FaEye />}
                         variant={'ghost'}
                         onClick={() =>
                           setShowPassword((showPassword) => !showPassword)
                         }
-                      >
-                        {showPassword ? <FaEye /> : <FaEyeSlash />}
-                      </Button>
+                      />
                     </InputRightElement>
                   </InputGroup>
                   <FormErrorMessage>{errors.password}</FormErrorMessage>
@@ -163,10 +172,9 @@ export default function Signup() {
                   <Button
                     loadingText="Submitting"
                     size="lg"
-                    bg={'blue.400'}
-                    color={'white'}
+                    bg={'orange.400'}
                     _hover={{
-                      bg: 'blue.500',
+                      bg: 'orange.600',
                     }}
                     type="submit"
                     isLoading={isSubmitting}
@@ -174,8 +182,13 @@ export default function Signup() {
                   >
                     Sign up
                   </Button>
-
                 </Stack>
+                  <Stack pt={2}>
+                      <Text align={'center'} >
+                          Already a user? <Link as={NavLink} to={'/login'} color={'blue.400'} >Login</Link>
+                      </Text>
+                  </Stack>
+
               </Stack>
             </form>
           )}

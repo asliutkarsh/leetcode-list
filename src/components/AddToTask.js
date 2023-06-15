@@ -1,10 +1,17 @@
-import React ,{useState,useEffect} from 'react'
+import React  from 'react'
 import {HStack, Input, Button, useColorMode, FormControl, FormErrorMessage, Flex} from '@chakra-ui/react'
 import {useAuth} from "../context/UserProvider";
 import {errorNotification, successNotification} from "../services/notification";
 import {createTask} from "../services/task-service";
 import {Field, Formik} from "formik";
 
+// AddToTask component is used to add a new task to the user's task list.
+// It is a form that takes in the problem id of the question to be added.
+// It uses the createTask function from task-service.js to add the task to the user's task list.
+// It also uses the fetchUserData function from UserProvider.js to update the user's data.
+// It uses the errorNotification and successNotification functions from notification.js to display notifications.
+// It uses the useAuth hook from UserProvider.js to get the user's id.
+// It uses the Formik component from formik to create the form.
 const AddToTask = () => {
 
     const {user,fetchUserData} = useAuth()
@@ -17,9 +24,11 @@ const AddToTask = () => {
         <HStack mt="8">
             <Formik
                 initialValues={{
-                    problem_id: "",
+                    problemId: "",
                 }}
+
                 validateOnMount={true}
+
                 onSubmit={(values, {setSubmitting,resetForm})  => {
                     setSubmitting(true);
                     createTask(values,userId).then(res => {
@@ -28,7 +37,7 @@ const AddToTask = () => {
                             "Successfully Added Task",
                             "Task Added"
                         )
-                        resetForm({ values: { problem_id: "" } });
+                        resetForm({ values: { problemId: "" } });
                     }).catch(err => {
                         errorNotification(
                             err.code,
@@ -49,13 +58,13 @@ const AddToTask = () => {
             >
                 {({ handleSubmit, errors, touched ,isSubmitting}) => (
                     <form onSubmit={handleSubmit}>
-                        <FormControl isInvalid={!!errors.problem_id && touched.problem_id}>
-                            <FormErrorMessage mb={'2'}>{errors.problem_id}</FormErrorMessage>
+                        <FormControl isInvalid={!!errors.problemId && touched.problemId}>
+                            <FormErrorMessage mb={'2'}>{errors.problemId}</FormErrorMessage>
                             <Field
                                 as={Input}
-                                id="problem_id"
-                                name="problem_id"
-                                color={colorMode === 'light' ? 'blackAlpha.900': 'pink.400'}
+                                id="problemId"
+                                name="problemId"
+                                color={colorMode === 'light' ? 'blackAlpha.900': 'orange.300'}
                                 varient="filled"
                                 htmlSize={30}
                                 placeholder='Enter Leetcode Question No'
@@ -75,12 +84,13 @@ const AddToTask = () => {
                                 }}
                             />
 
-                            {/*Todo*/}
-                            {/*align center*/}
                             <Flex justify="center" mt={2}>
                                 <Button
                                     size = 'lg'
-                                    colorScheme="pink"
+                                    bg={'orange.400'}
+                                    _hover={{
+                                        bg: 'orange.600',
+                                    }}
                                     px="8"
                                     type='submit'
                                     isLoading={isSubmitting}
