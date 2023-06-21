@@ -5,10 +5,7 @@ import {
   Container,
   Text,
   Button,
-  Stack,
-  Icon,
-  useColorModeValue,
-  createIcon,
+  Stack
 } from '@chakra-ui/react';
 
 import{NavLink } from 'react-router-dom';
