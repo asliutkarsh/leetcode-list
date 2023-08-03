@@ -2,6 +2,9 @@
 
 Leetcode List is a react application that allows you to track your progress on LeetCode problems and earn points for your achievements. By solving problems and entering the Leetcode problem ID along with the corresponding difficulty level (easy, medium, or hard), you can accumulate points and monitor your progress over time.
 
+Deployed on: https://leetcodelist.asliutkarsh.me
+Backend Repo: https://github.com/asliutkarsh/leetcode-list-api
+
 ## Features
 
 - Track your LeetCode problem-solving progress
