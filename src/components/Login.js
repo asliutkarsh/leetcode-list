@@ -44,9 +44,6 @@ const Login = () => {
                 <Heading fontSize={'4xl'} textAlign={'center'}>
                     Sign in
                 </Heading>
-                {/*<Text fontSize={'lg'} color={'gray.600'}>*/}
-                {/*    to enjoy all of our cool features ✌️*/}
-                {/*</Text>*/}
             </Stack>
           <Box
             minH={'40vh'}
@@ -125,24 +122,18 @@ const Login = () => {
                   align={'start'}
                   justify={'space-between'}
                 >
-                {/* <Field
-                  as={Checkbox}
-                  id="rememberMe"
-                  name="rememberMe"
-                  colorScheme="purple"
-                >
-                  Remember me?
-                </Field> */}
-                  {/* <Link color={'blue.400'}>Forgot password?</Link> */}
+                    <Stack>
+                        <Link as={NavLink} to={'/forgot-password'} color={'blue.400'}>Forgot password?</Link>
+                    </Stack>
                 </Stack>
                 <Button
-                    bg={'orange.400'}
-                    _hover={{
-                        bg: 'orange.600',
-                    }}
-                  type="submit"
-                  isLoading={isSubmitting}
-                  disabled={errors || isSubmitting}
+                        bg={'orange.400'}
+                        _hover={{
+                            bg: 'orange.600',
+                        }}
+                      type="submit"
+                      isLoading={isSubmitting}
+                      disabled={errors || isSubmitting}
                   >
                   Sign in
                 </Button>

@@ -48,9 +48,6 @@ export default function Signup() {
               <Heading fontSize={'4xl'} textAlign={'center'}>
                   Sign up
               </Heading>
-              {/*<Text fontSize={'lg'} color={'gray.600'}>*/}
-              {/*    to enjoy all of our cool features ✌️*/}
-              {/*</Text>*/}
           </Stack>
         <Box
           rounded={'lg'}
@@ -63,6 +60,7 @@ export default function Signup() {
           initialValues={{
             name: "",
             username: "",
+            email: "",
             password: "",
             // rememberMe: false
           }}
@@ -73,7 +71,7 @@ export default function Signup() {
             console.log("Submitting")
             saveUser(user).then(res => {
               console.log("Successfully logged in");
-                resetForm({ values: { name: "", username: "", password: "", } });
+                resetForm({ values: { name: "", username: "",email: "", password: "", } });
               successNotification(
                 "User saved",
                 `${user.name} was successfully saved`
@@ -131,6 +129,26 @@ export default function Signup() {
                     }}
                   />
                   <FormErrorMessage>{errors.username}</FormErrorMessage>
+                </FormControl>
+
+                {/*  Email*/}
+                <FormControl isRequired='true' isInvalid={!!errors.email && touched.email}>
+                  <FormLabel>Email</FormLabel>
+                  <Field
+                    as={Input}
+                    id="email-signup"
+                    name="email"
+                    type="email"
+                    placeholder="Enter email"
+                    validate={(value) => {
+                      let error;
+                      if (!value.includes("@")) {
+                        error = "Invalid email";
+                      }
+                      return error;
+                    }}
+                  />
+                  <FormErrorMessage>{errors.email}</FormErrorMessage>
                 </FormControl>
 
 

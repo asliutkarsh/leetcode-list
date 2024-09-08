@@ -8,6 +8,8 @@ import Profile from './pages/Profile';
 import ProtectedRoute from './components/ProtectedRoute'
 import {LoginPage} from "./pages/LoginPage";
 import {SignupPage} from "./pages/SignupPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 
 function App() {
@@ -22,6 +24,8 @@ function App() {
               <Route path="/profile" element = {<ProtectedRoute><Profile/></ProtectedRoute>} />
               <Route path="/login" element = {<LoginPage/>} />
               <Route path="/signup" element = {<SignupPage/>} />
+                <Route path="/forgot-password" element = {<ForgotPasswordPage/>} />
+                <Route path="/reset-password" element = {<ResetPasswordPage/>} />
               <Route path="/faq" element = {<FaqPage/>} />
             </Routes> 
       </ChakraProvider>

@@ -34,3 +34,37 @@ export const login = async(usernameAndPassword) => {
             throw e;
     }
 }
+
+export const requestPasswordReset = async(values) => {
+    try {
+        console.log("Requesting Password Reset Api Call")
+        return await myAxios.post(
+            "/auth/request-password-reset?username=" +values.username
+        )
+    } catch (e) {
+        throw e;
+    }
+}
+
+export const validateToken = async(token) => {
+    try {
+        console.log("Validating Token Api Call")
+        return await myAxios.get(
+            `/auth/reset-password?token=${token}`
+        )
+    } catch (e) {
+        throw e;
+    }
+}
+
+export const resetPassword = async(passwordData) => {
+    try {
+        console.log("Resetting Password Api Call")
+        return await myAxios.post(
+            "/auth/reset-password?token=" + passwordData.token,
+            {"newPassword": passwordData.newPassword}
+        )
+    } catch (e) {
+        throw e;
+    }
+}
